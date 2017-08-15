@@ -7,7 +7,7 @@ namespace string_calculator_kata
 {
 
     [TestClass]
-    public class UnitTest1
+    public class StringCalculatorTests
     {
         [Test]
         public void EmptyStringShouldReturn0()
