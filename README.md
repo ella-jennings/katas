@@ -1,8 +1,8 @@
-## C# Katas ##
+# C# Katas #
 
 As a foundation developer I'm trying to get to grips with unit testing and using this as a personal space to do so.
 
-# Setup #
+## Setup ##
 
 In visual studio, set up a new `Project` then `Unit Test Project` (I set mine up in c#).
 
@@ -27,15 +27,15 @@ namespace kataName
 } 
 ```
 
-# Unit Test #
+## Unit Test ##
 
 Written in the form:
 
-**Arrange**
-**Act**
-**Assert**
+- **Arrange**
+- **Act**
+- **Assert**
 
-# Running the tests #
+## Running the tests ##
 
 `Test` -> `Run` -> `All Tests` 
 
@@ -43,7 +43,7 @@ or
 
 `CTRL + R, A`
 
-# Good Practice # 
+## Good Practice ## 
 
 + Always start with a failing test before you make it pass
 + Write one test at a time
