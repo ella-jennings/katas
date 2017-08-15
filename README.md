@@ -37,7 +37,11 @@ Written in the form:
 
 # Running the tests #
 
+`Test` -> `Run` -> `All Tests` 
 
+or
+
+`CTRL + R, A`
 
 # Good Practice # 
 
