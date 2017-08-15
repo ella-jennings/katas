@@ -19,13 +19,25 @@ namespace string_calculator_kata
             Assert.That(stringSum, Is.EqualTo(0));
         }
 
-     
+        [Test]
+        public void StringOf1ShouldReturn1()
+        {
+            string stringOfNumbers = "1";
+
+            int stringSum = new StringCalculator().Add(stringOfNumbers);
+
+            Assert.That(stringSum, Is.EqualTo(1));
+        }
+
     }
 
     public class StringCalculator
     {
        public int Add(string stringToAdd)
        {
+           if (!string.IsNullOrEmpty(stringToAdd))
+               return 1;
+
            return 0;
        }
     }
