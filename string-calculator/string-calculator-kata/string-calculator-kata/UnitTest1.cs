@@ -9,36 +9,19 @@ namespace string_calculator_kata
     [TestClass]
     public class StringCalculatorTests
     {
-        [Test]
-        public void EmptyStringShouldReturn0()
+        [TestCase("", 0)]
+        [TestCase("1", 1)]
+        [TestCase("1,2", 3)]
+        [TestCase("1,2,3", 6)]
+        public void InputShouldReturnExpectedOutput(string expectedInput, int expectedOutput)
         {
-            string stringOfNumbers = "";
+            string stringOfNumbers = expectedInput;
 
             int stringSum = new StringCalculator().Add(stringOfNumbers);
 
-            Assert.That(stringSum, Is.EqualTo(0));
+            Assert.That(stringSum, Is.EqualTo(expectedOutput));
         }
-
-        [Test]
-        public void StringOf1ShouldReturn1()
-        {
-            string stringOfNumbers = "1";
-
-            int stringSum = new StringCalculator().Add(stringOfNumbers);
-
-            Assert.That(stringSum, Is.EqualTo(1));
-        }
-
-        [Test]
-        public void StringOf2ShouldReturnSum()
-        {
-            string stringOfNumbers = "1,2";
-
-            int stringSum = new StringCalculator().Add(stringOfNumbers);
-
-            Assert.That(stringSum, Is.EqualTo(3));
-        }
-
+        
         public class StringCalculator
         {
             public int Add(string stringOfNumbers)
