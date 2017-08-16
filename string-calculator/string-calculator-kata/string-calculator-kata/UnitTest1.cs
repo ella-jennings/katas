@@ -1,11 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NUnit.Framework;
 using Assert = NUnit.Framework.Assert;
 
 namespace string_calculator_kata
-{
-
+{ 
     [TestClass]
     public class StringCalculatorTests
     {
@@ -29,16 +29,39 @@ namespace string_calculator_kata
             Assert.That(stringSum, Is.EqualTo(1));
         }
 
-    }
+        [Test]
+        public void StringOf2ShouldReturnSum()
+        {
+            string stringOfNumbers = "1,2";
 
-    public class StringCalculator
-    {
-       public int Add(string stringToAdd)
-       {
-           if (!string.IsNullOrEmpty(stringToAdd))
-               return 1;
+            int stringSum = new StringCalculator().Add(stringOfNumbers);
 
-           return 0;
-       }
+            Assert.That(stringSum, Is.EqualTo(3));
+        }
+
+        public class StringCalculator
+        {
+            public int Add(string stringOfNumbers)
+            {
+   
+
+                if (string.IsNullOrEmpty(stringOfNumbers))
+                    return 0;
+                else
+                {
+                    var result = 0;
+                    string[] stringArray =  stringOfNumbers.Split(',');
+
+                    foreach (string number in stringArray)
+                    {
+                        var stringNumber = Convert.ToInt32(number);
+                        result += stringNumber;
+                    }
+              
+                    return result;
+                }
+            }
+        }
     }
 }
+
