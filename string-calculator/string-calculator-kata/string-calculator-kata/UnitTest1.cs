@@ -15,6 +15,7 @@ namespace string_calculator_kata
         [TestCase("1,2,3", 6)]
         [TestCase("1\n2",3)]
         [TestCase("1,2\n3", 6)]
+        [TestCase("-1"), "Negative numbers not allowed: -1"]
         public void InputShouldReturnExpectedOutput(string expectedInput, int expectedOutput)
         {
             string stringOfNumbers = expectedInput;
@@ -28,9 +29,7 @@ namespace string_calculator_kata
         {
             public int Add(string stringOfNumbers)
             {
-   
-
-                if (string.IsNullOrEmpty(stringOfNumbers))
+                   if (string.IsNullOrEmpty(stringOfNumbers))
                     return 0;
                 else
                 {
@@ -40,6 +39,10 @@ namespace string_calculator_kata
                     foreach (string number in stringArray)
                     {
                         var stringNumber = Convert.ToInt32(number);
+                        if (stringNumber < 1)
+                        {
+                            Console.WriteLine("Negative numbers not allowed: -1");
+                        }
                         result += stringNumber;
                     }
               
