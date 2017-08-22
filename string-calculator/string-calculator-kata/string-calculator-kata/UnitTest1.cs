@@ -48,7 +48,7 @@ namespace string_calculator_kata
                         var stringNumber = Convert.ToInt32(number);
                         if (stringNumber < 1)
                         {
-                            result = ThrowException(stringOfNumbers);
+                            result = ThrowException(stringArray);
                             return result;
                         }
                         sum += stringNumber;
@@ -59,10 +59,9 @@ namespace string_calculator_kata
                 }
             }
 
-            private string ThrowException(string stringOfNumbers)
+            private string ThrowException(string[] stringArray)
             {
                 string result = "Negative numbers not allowed: ";
-                string[] stringArray = stringOfNumbers.Split(',', '\n');
 
                 foreach (string number in stringArray)
                 {
