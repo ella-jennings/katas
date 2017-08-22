@@ -18,6 +18,7 @@ namespace string_calculator_kata
         [TestCase("1\n2","3")]
         [TestCase("1,2\n3", "6")]
         [TestCase("-1", "Negative numbers not allowed: -1")]
+        [TestCase("1,-2", "Negative numbers not allowed: -2")]
    
 
         public void InputShouldReturnExpectedOutput(string expectedInput, string expectedOutput)
@@ -29,6 +30,7 @@ namespace string_calculator_kata
             Assert.That(stringSum, Is.EqualTo(expectedOutput));
         }
         
+        // Solve begins here //
         public class StringCalculator
         {
             public string Add(string stringOfNumbers)
@@ -46,7 +48,7 @@ namespace string_calculator_kata
                         var stringNumber = Convert.ToInt32(number);
                         if (stringNumber < 1)
                         {
-                            result = ThrowException();
+                            result = ThrowException(stringOfNumbers);
                             return result;
                         }
                         sum += stringNumber;
@@ -57,9 +59,20 @@ namespace string_calculator_kata
                 }
             }
 
-            private string ThrowException()
+            private string ThrowException(string stringOfNumbers)
             {
-                string result = "Negative numbers not allowed: -1";
+                string result = "Negative numbers not allowed: ";
+                string[] stringArray = stringOfNumbers.Split(',', '\n');
+
+                foreach (string number in stringArray)
+                {
+                    var stringNumber = Convert.ToInt32(number);
+                    if (stringNumber < 1)
+                    {
+                        result += number;
+                    }
+
+                }
                 return result;
             }
         }
