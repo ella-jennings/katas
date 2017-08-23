@@ -19,6 +19,7 @@ namespace string_calculator_kata
         [TestCase("1,2\n3", "6")]
         [TestCase("-1", "Negative numbers not allowed: -1")]
         [TestCase("1,-2", "Negative numbers not allowed: -2")]
+        [TestCase("-1,-2\n-3", "Negative numbers not allowed: -1, -2, -3")]
    
 
         public void InputShouldReturnExpectedOutput(string expectedInput, string expectedOutput)
@@ -53,7 +54,6 @@ namespace string_calculator_kata
                         }
                         sum += stringNumber;
                     }
-
                     result = sum.ToString();
                     return result;
                 }
@@ -68,10 +68,10 @@ namespace string_calculator_kata
                     var stringNumber = Convert.ToInt32(number);
                     if (stringNumber < 1)
                     {
-                        result += number;
+                        result += number + ", ";
                     }
-
                 }
+                result = result.Substring(0, result.Length - 2);
                 return result;
             }
         }
