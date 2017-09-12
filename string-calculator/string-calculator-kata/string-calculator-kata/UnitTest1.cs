@@ -1,5 +1,4 @@
-﻿using System;
-using System.CodeDom;
+﻿using System.CodeDom;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -9,7 +8,7 @@ using Assert = NUnit.Framework.Assert;
 namespace string_calculator_kata
 { 
     [TestClass]
-    public class StringCalculatorTests
+    public partial class StringCalculatorTests
     {
         [TestCase("", "0")]
         [TestCase("1", "1")]
@@ -17,11 +16,7 @@ namespace string_calculator_kata
         [TestCase("1,2,3", "6")]
         [TestCase("1\n2","3")]
         [TestCase("1,2\n3", "6")]
-        [TestCase("-1", "Negative numbers not allowed: -1")]
-        [TestCase("1,-2", "Negative numbers not allowed: -2")]
-        [TestCase("-1,-2\n-3", "Negative numbers not allowed: -1, -2, -3")]
-   
-
+      
         public void InputShouldReturnExpectedOutput(string expectedInput, string expectedOutput)
         {
             string stringOfNumbers = expectedInput;
@@ -30,50 +25,16 @@ namespace string_calculator_kata
 
             Assert.That(stringSum, Is.EqualTo(expectedOutput));
         }
-        
-        // Solve begins here //
-        public class StringCalculator
+
+        [TestCase("-1", "Negative numbers not allowed: -1")]
+        [TestCase("1,-2", "Negative numbers not allowed: -2")]
+        [TestCase("-1,-2\n-3", "Negative numbers not allowed: -1, -2, -3")]
+        public void NegativeNumbersShouldThrowException(string expectedInput, string expectedOutput)
         {
-            public string Add(string stringOfNumbers)
-            {
-                   if (string.IsNullOrEmpty(stringOfNumbers))
-                    return "0";
-
-                {
-                    var result = "";
-                    var sum = 0;
-                    string[] stringArray =  stringOfNumbers.Split(',','\n') ;
-
-                    foreach (string number in stringArray)
-                    {
-                        var stringNumber = Convert.ToInt32(number);
-                        if (stringNumber < 1)
-                        {
-                            result = ThrowException(stringArray);
-                            return result;
-                        }
-                        sum += stringNumber;
-                    }
-                    result = sum.ToString();
-                    return result;
-                }
-            }
-
-            private string ThrowException(string[] stringArray)
-            {
-                string result = "Negative numbers not allowed: ";
-
-                foreach (string number in stringArray)
-                {
-                    var stringNumber = Convert.ToInt32(number);
-                    if (stringNumber < 1)
-                    {
-                        result += number + ", ";
-                    }
-                }
-                result = result.Substring(0, result.Length - 2);
-                return result;
-            }
+            string stringOfNumbers = expectedInput;
+            var stringCalculator = new StringCalculator();
+            var exception = Assert.Throws<AssertFailedException>(() => stringCalculator.Add(stringOfNumbers));
+            Assert.AreEqual(expectedOutput, exception.Message);
         }
     }
 }
