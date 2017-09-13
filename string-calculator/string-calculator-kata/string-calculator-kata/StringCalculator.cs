@@ -14,9 +14,16 @@ namespace string_calculator_kata
                 if (string.IsNullOrEmpty(stringOfNumbers))
                     return "0";
 
+                IEnumerable<int> numbers;
+
+                if (stringOfNumbers.StartsWith(";"))
+                {
+                    stringOfNumbers = stringOfNumbers.TrimStart(';','\n');
+                    numbers = stringOfNumbers.Split(';', ',', '\n').Select(x => Convert.ToInt32(x));
+                }
+                else numbers = stringOfNumbers.Split(',', '\n').Select(x => Convert.ToInt32(x));
 
                 var sum = 0;
-                var numbers = stringOfNumbers.Split(',', '\n').Select(x => Convert.ToInt32(x));
 
                 if (numbers.Any(x => IsNegative(x)))
                 {

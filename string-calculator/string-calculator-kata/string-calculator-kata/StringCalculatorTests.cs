@@ -7,6 +7,7 @@ using Assert = NUnit.Framework.Assert;
 
 namespace string_calculator_kata
 { 
+ 
     [TestClass]
     public partial class StringCalculatorTests
     {
@@ -29,8 +30,8 @@ namespace string_calculator_kata
         [TestCase("-1,-2\n-3", "Negative numbers not allowed: -1, -2, -3")]
         public void NegativeNumbersShouldThrowException(string expectedInput, string expectedOutput)
         {
-            var stringCalculator = new StringCalculator();
-            var exception = Assert.Throws<AssertFailedException>(() => stringCalculator.Add(expectedInput));
+            var stringSum = new StringCalculator();
+            var exception = Assert.Throws<AssertFailedException>(() => stringSum.Add(expectedInput));
             Assert.AreEqual(expectedOutput, exception.Message);
         }
     }
