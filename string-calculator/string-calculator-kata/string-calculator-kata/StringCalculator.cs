@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace string_calculator_kata
@@ -12,38 +14,36 @@ namespace string_calculator_kata
                 if (string.IsNullOrEmpty(stringOfNumbers))
                     return "0";
 
-                {
-                    var result = "";
-                    var sum = 0;
-                    string[] stringArray =  stringOfNumbers.Split(',','\n') ;
 
-                    foreach (string number in stringArray)
-                    {
-                        var stringNumber = Convert.ToInt32(number);
-                        if (stringNumber < 1)
-                        {
-                            throw new AssertFailedException(NegativeNumberException(stringArray));
-                        }
-                        sum += stringNumber;
-                    }
-                    result = sum.ToString();
-                    return result;
+                var sum = 0;
+                var numbers = stringOfNumbers.Split(',', '\n').Select(x => Convert.ToInt32(x));
+
+                if (numbers.Any(x => IsNegative(x)))
+                {
+                    var negativeNumbers2 = numbers.Where(x => IsNegative(x));
+                    throw new AssertFailedException(CreateNegativeNumberExceptionMessage(negativeNumbers2));
                 }
+
+                foreach (var number in numbers)
+                {
+                    sum += number;
+                }
+
+
+                var result = sum.ToString();
+                return result;
+
             }
 
-            private string NegativeNumberException(string[] stringArray)
+            private static bool IsNegative(int number)
+            {
+                return number < 0;
+            }
+
+            private string CreateNegativeNumberExceptionMessage(IEnumerable<int> negativeNumbers)
             {
                 string result = "Negative numbers not allowed: ";
-
-                foreach (string number in stringArray)
-                {
-                    var stringNumber = Convert.ToInt32(number);
-                    if (stringNumber < 1)
-                    {
-                        result += number + ", ";
-                    }
-                }
-                result = result.Substring(0, result.Length - 2);
+                result += string.Join(", ", negativeNumbers);
                 return result;
             }
         }

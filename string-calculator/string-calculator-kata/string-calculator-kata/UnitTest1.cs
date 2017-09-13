@@ -11,6 +11,7 @@ namespace string_calculator_kata
     public partial class StringCalculatorTests
     {
         [TestCase("", "0")]
+        [TestCase("0", "0")]
         [TestCase("1", "1")]
         [TestCase("1,2", "3")]
         [TestCase("1,2,3", "6")]
@@ -19,10 +20,7 @@ namespace string_calculator_kata
       
         public void InputShouldReturnExpectedOutput(string expectedInput, string expectedOutput)
         {
-            string stringOfNumbers = expectedInput;
-
-            string stringSum = new StringCalculator().Add(stringOfNumbers);
-
+            var stringSum = new StringCalculator().Add(expectedInput);
             Assert.That(stringSum, Is.EqualTo(expectedOutput));
         }
 
@@ -31,9 +29,8 @@ namespace string_calculator_kata
         [TestCase("-1,-2\n-3", "Negative numbers not allowed: -1, -2, -3")]
         public void NegativeNumbersShouldThrowException(string expectedInput, string expectedOutput)
         {
-            string stringOfNumbers = expectedInput;
             var stringCalculator = new StringCalculator();
-            var exception = Assert.Throws<AssertFailedException>(() => stringCalculator.Add(stringOfNumbers));
+            var exception = Assert.Throws<AssertFailedException>(() => stringCalculator.Add(expectedInput));
             Assert.AreEqual(expectedOutput, exception.Message);
         }
     }
