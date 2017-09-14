@@ -30,7 +30,7 @@ namespace string_calculator_kata
                 }
 
 
-                var result = sum.ToString();
+                var result = (sum % 1000).ToString();
                 return result;
 
             }

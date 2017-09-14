@@ -17,9 +17,13 @@ namespace string_calculator_kata
         [TestCase("1", "1")]
         [TestCase("1,2", "3")]
         [TestCase("1,2,3", "6")]
+        [TestCase("1000,2,3", "5")]
+        [TestCase("500,700,3", "203")]
         [TestCase("1\n2","3")]
         [TestCase("1,2\n3", "6")]
         [TestCase(";\n1,2;3", "6")]
+        [TestCase(".\n1,2.3", "6")]
+        [TestCase("-\n1-2-3", "6")]
       
         public void InputShouldReturnExpectedOutput(string expectedInput, string expectedOutput)
         {
