@@ -14,21 +14,14 @@ namespace string_calculator_kata
                 if (string.IsNullOrEmpty(stringOfNumbers))
                     return "0";
 
-                IEnumerable<int> numbers;
-
-                if (stringOfNumbers.StartsWith(";"))
-                {
-                    stringOfNumbers = stringOfNumbers.TrimStart(';','\n');
-                    numbers = stringOfNumbers.Split(';', ',', '\n').Select(x => Convert.ToInt32(x));
-                }
-                else numbers = stringOfNumbers.Split(',', '\n').Select(x => Convert.ToInt32(x));
-
                 var sum = 0;
-
+                var firstChar = stringOfNumbers.First();
+                var numbers = SplitStringIntoInts_WithDelimiterIfPresent(stringOfNumbers, firstChar);
+                
                 if (numbers.Any(x => IsNegative(x)))
                 {
-                    var negativeNumbers2 = numbers.Where(x => IsNegative(x));
-                    throw new AssertFailedException(CreateNegativeNumberExceptionMessage(negativeNumbers2));
+                    var negativeNumbers = numbers.Where(x => IsNegative(x));
+                    throw new AssertFailedException(CreateNegativeNumberExceptionMessage(negativeNumbers));
                 }
 
                 foreach (var number in numbers)
@@ -42,16 +35,45 @@ namespace string_calculator_kata
 
             }
 
-            private static bool IsNegative(int number)
-            {
-                return number < 0;
-            }
-
             private string CreateNegativeNumberExceptionMessage(IEnumerable<int> negativeNumbers)
             {
                 string result = "Negative numbers not allowed: ";
                 result += string.Join(", ", negativeNumbers);
                 return result;
+            }
+
+            private static bool IsNegative(int number)
+            {
+                return number < 0;
+            }
+
+            private static bool IsNumber(char firstChar)
+            {
+                return (firstChar > 47 && firstChar < 58 );
+            }
+
+            private static bool StringStartsWithDelimiter(string inputString, char firstChar)
+            {
+                return (!IsNumber(firstChar) && inputString[1] == '\n');
+            }
+
+            private IEnumerable<int> SplitStringIntoInts_WithDelimiterIfPresent(string inputString, char firstChar)
+            {
+
+                IEnumerable<int> numbers;
+                if (StringStartsWithDelimiter(inputString, firstChar))
+                {
+                    inputString = TrimDelimiter(inputString, firstChar);
+                    numbers = inputString.Split(firstChar, ',', '\n').Select(x => Convert.ToInt32(x));
+                }
+                else numbers = inputString.Split(',', '\n').Select(x => Convert.ToInt32(x));
+
+                return numbers;
+            }
+
+            private static string TrimDelimiter(string inputString, char delimiter)
+            {
+                return inputString.TrimStart(delimiter, '\n'); 
             }
         }
     }
