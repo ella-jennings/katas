@@ -1,4 +1,5 @@
 ﻿
+using System.Collections.Generic;
 using NUnit.Framework;
 using NUnit.Framework.Constraints;
 
@@ -12,10 +13,9 @@ namespace PotterKata
         [TestCase(2, 16)]
         public void NBooksCostExpectedPrice(int numberOfBookOne, int expectedPrice)
         {
-            var bookOne = new Book();
-            var bookTwo = new Book();
-            var basket = new Basket(bookOne, bookTwo);
-            basket.Purchase(numberOfBookOne, bookOne);
+            var bookOne = new Book(1);
+            var basket = new Basket();
+            basket.Add(numberOfBookOne, bookOne);
             var result = basket.GetTotal();
 
             Assert.That(result, Is.EqualTo(expectedPrice));
@@ -24,13 +24,13 @@ namespace PotterKata
         [TestCase(1, 1, 15.2)]
         public void BuyingTwoDifferentBooks_ShouldReturnFivePercentDiscount(int numberBookOne, int numberBookTwo, decimal expectedPrice)
         {
-            var bookOne = new Book();
-            var bookTwo = new Book();
-            var basket = new Basket(bookOne, bookTwo);
-            basket.Purchase(numberBookOne, bookOne);
-            basket.Purchase(numberBookTwo, bookTwo);
+            var bookOne = new Book(1);
+            var bookTwo = new Book(2);
+            var basket = new Basket();
+            basket.Add(numberBookOne, bookOne);
+            basket.Add(numberBookTwo, bookTwo);
             var result = basket.GetTotal();
-            
+
             Assert.That(result, Is.EqualTo(expectedPrice));
         }
     }
@@ -38,59 +38,62 @@ namespace PotterKata
     public class Basket
     {
         public readonly int PriceOfBook = 8;
-        private readonly Book _bookOne;
-        private readonly Book _bookTwo;
-        public decimal Total { get; private set; }
+        private decimal _total;
+        private readonly Dictionary<int, int> _purchases;
 
-        public Basket(Book bookOne, Book bookTwo)
+        public Basket()
         {
-            _bookOne = bookOne;
-            _bookTwo = bookTwo;
+        _purchases = new Dictionary<int, int>();
+        }
+
+        public void Add(int numberToBeAdded, Book book)
+        {
+            var bookNumberInSeries = book.GetNumberInSeries();
+
+            if (_purchases.ContainsKey(bookNumberInSeries))
+            {
+                _purchases[bookNumberInSeries] += numberToBeAdded;
+            }
+            else _purchases.Add(bookNumberInSeries, numberToBeAdded);
         }
 
         private void ApplyDiscount(int bookSum)
         {
             const decimal fivePercentDiscount = 5;
 
-            if (_bookOne.HasBeenPurchased() && _bookTwo.HasBeenPurchased())
+            if (_purchases.ContainsKey(1) && _purchases.ContainsKey(2))
             {
-                Total = bookSum * ((100 - fivePercentDiscount) / 100);
+                _total = bookSum * ((100 - fivePercentDiscount) / 100);
             }
             else
-            Total = bookSum;
+            _total = bookSum;
         }
-
-
+        
         public decimal GetTotal()
         {
-            var bookSum = (_bookOne.GetNumberPurchased() + _bookTwo.GetNumberPurchased()) * PriceOfBook;
+            var totalBooks = 0;
+            foreach (KeyValuePair<int, int> entry in _purchases)
+            {
+                totalBooks += entry.Value;
+            }
+            var bookSum = totalBooks * PriceOfBook;
             ApplyDiscount(bookSum);
-            return Total;
-        }
-
-        public void Purchase(int numberToBePurchased, Book book)
-        {
-            book.AddNumberPurchased(numberToBePurchased);
+            return _total;
         }
     }
 
     public class Book
     {
-        private int _numberPurchased;
-     
-        public void AddNumberPurchased(int number)
+      private readonly int _numberInSeries;
+
+        public Book(int numberInSeries)
         {
-            _numberPurchased = number;
+            _numberInSeries = numberInSeries;
         }
 
-        public bool HasBeenPurchased()
+        public int GetNumberInSeries()
         {
-            return _numberPurchased > 0;
-        }
-
-        public int GetNumberPurchased()
-        {
-            return _numberPurchased;
+            return _numberInSeries;
         }
     }
 }
