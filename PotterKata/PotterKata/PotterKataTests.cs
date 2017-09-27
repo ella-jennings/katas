@@ -1,46 +1,96 @@
-﻿using System.Runtime.InteropServices;
+﻿
 using NUnit.Framework;
-using NUnit.Framework.Internal;
-using Assert = Microsoft.VisualStudio.TestTools.UnitTesting.Assert;
+using NUnit.Framework.Constraints;
 
 namespace PotterKata
 {
     [TestFixture]
     public class PotterKataTests
     {
-       [Test]
-        public void OneBookCostsEightEuros()
-        {
-            var book = new Book();
-
-            Assert.AreEqual(8, book.Price);
-        }
-
         [TestCase(0, 0)]
         [TestCase(1, 8)]
         [TestCase(2, 16)]
-        public void NBooksCostExpectedPrice(int numberOfBooks, int expectedPrice)
+        public void NBooksCostExpectedPrice(int numberOfBookOne, int expectedPrice)
         {
-            var basket = new Basket();
-            basket.GetTotal(numberOfBooks);
+            var bookOne = new Book();
+            var bookTwo = new Book();
+            var basket = new Basket(bookOne, bookTwo);
+            basket.Purchase(numberOfBookOne, bookOne);
+            var result = basket.GetTotal();
 
-            Assert.AreEqual(expectedPrice, basket.Total);
+            Assert.That(result, Is.EqualTo(expectedPrice));
+        }
+
+        [TestCase(1, 1, 15.2)]
+        public void BuyingTwoDifferentBooks_ShouldReturnFivePercentDiscount(int numberBookOne, int numberBookTwo, decimal expectedPrice)
+        {
+            var bookOne = new Book();
+            var bookTwo = new Book();
+            var basket = new Basket(bookOne, bookTwo);
+            basket.Purchase(numberBookOne, bookOne);
+            basket.Purchase(numberBookTwo, bookTwo);
+            var result = basket.GetTotal();
+            
+            Assert.That(result, Is.EqualTo(expectedPrice));
         }
     }
 
     public class Basket
     {
-        public int Total;
+        public readonly int PriceOfBook = 8;
+        private readonly Book _bookOne;
+        private readonly Book _bookTwo;
+        public decimal Total { get; private set; }
 
-        public void GetTotal(int numberOfBooks)
+        public Basket(Book bookOne, Book bookTwo)
         {
-            var book = new Book();
-            Total = numberOfBooks * book.Price;
+            _bookOne = bookOne;
+            _bookTwo = bookTwo;
+        }
+
+        private void ApplyDiscount(int bookSum)
+        {
+            const decimal fivePercentDiscount = 5;
+
+            if (_bookOne.HasBeenPurchased() && _bookTwo.HasBeenPurchased())
+            {
+                Total = bookSum * ((100 - fivePercentDiscount) / 100);
+            }
+            else
+            Total = bookSum;
+        }
+
+
+        public decimal GetTotal()
+        {
+            var bookSum = (_bookOne.GetNumberPurchased() + _bookTwo.GetNumberPurchased()) * PriceOfBook;
+            ApplyDiscount(bookSum);
+            return Total;
+        }
+
+        public void Purchase(int numberToBePurchased, Book book)
+        {
+            book.AddNumberPurchased(numberToBePurchased);
         }
     }
 
     public class Book
     {
-        public readonly int Price = 8;
+        private int _numberPurchased;
+     
+        public void AddNumberPurchased(int number)
+        {
+            _numberPurchased = number;
+        }
+
+        public bool HasBeenPurchased()
+        {
+            return _numberPurchased > 0;
+        }
+
+        public int GetNumberPurchased()
+        {
+            return _numberPurchased;
+        }
     }
 }
