@@ -22,6 +22,7 @@ namespace PotterKata
         }
 
         [TestCase(1, 1, 15.2)]
+        [TestCase(1, 2, 23.2)]
         public void BuyingTwoDifferentBooks_ShouldReturnFivePercentDiscount(int numberBookOne, int numberBookTwo, decimal expectedPrice)
         {
             var bookOne = new Book(1);
@@ -37,38 +38,51 @@ namespace PotterKata
 
     public class Basket
     {
-        public readonly int PriceOfBook = 8;
+        private readonly int _priceOfBook = 8;
+        private int _bookCount = 0;
         private decimal _total;
         private readonly Dictionary<int, int> _purchases;
 
         public Basket()
         {
-        _purchases = new Dictionary<int, int>();
+            _purchases = new Dictionary<int, int>();
         }
 
         public void Add(int numberToBeAdded, Book book)
         {
             var bookNumberInSeries = book.GetNumberInSeries();
-
-            if (_purchases.ContainsKey(bookNumberInSeries))
-            {
-                _purchases[bookNumberInSeries] += numberToBeAdded;
-            }
-            else _purchases.Add(bookNumberInSeries, numberToBeAdded);
+            _purchases.Add(bookNumberInSeries, numberToBeAdded);
+            _bookCount += numberToBeAdded;
         }
 
-        private void ApplyDiscount(int bookSum)
+        private void ApplyTotalDiscount(int bookSum)
         {
             const decimal fivePercentDiscount = 5;
 
             if (_purchases.ContainsKey(1) && _purchases.ContainsKey(2))
             {
-                _total = bookSum * ((100 - fivePercentDiscount) / 100);
+                var numberOfBooksDiscounted = 2;
+                var sumOfNormalPriceBooks = GetSumOfNormalPriceBooks(numberOfBooksDiscounted);
+
+                var discountSum = numberOfBooksDiscounted * _priceOfBook * ((100 - fivePercentDiscount) / 100);
+                _total = sumOfNormalPriceBooks + discountSum;
             }
             else
             _total = bookSum;
         }
-        
+
+        private int GetSumOfNormalPriceBooks(int numberOfBooksDiscounted)
+        {
+            var normalPriceSum = 0;
+            var normalPriceBooks = 0;
+            if (_bookCount > numberOfBooksDiscounted)
+            {
+                normalPriceBooks += 1;
+                normalPriceSum = normalPriceBooks * _priceOfBook;
+            }
+            return normalPriceSum;
+        }
+
         public decimal GetTotal()
         {
             var totalBooks = 0;
@@ -76,8 +90,8 @@ namespace PotterKata
             {
                 totalBooks += entry.Value;
             }
-            var bookSum = totalBooks * PriceOfBook;
-            ApplyDiscount(bookSum);
+            var bookSum = totalBooks * _priceOfBook;
+            ApplyTotalDiscount(bookSum);
             return _total;
         }
     }
