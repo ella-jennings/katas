@@ -1,4 +1,5 @@
 ﻿
+using System;
 using System.Collections.Generic;
 using NUnit.Framework;
 using NUnit.Framework.Constraints;
@@ -23,6 +24,9 @@ namespace PotterKata
 
         [TestCase(1, 1, 15.2)]
         [TestCase(1, 2, 23.2)]
+        [TestCase(1, 3, 31.2)]
+        [TestCase(2, 2, 30.4)]
+        [TestCase(3, 5, 61.6)]
         public void BuyingTwoDifferentBooks_ShouldReturnFivePercentDiscount(int numberBookOne, int numberBookTwo, decimal expectedPrice)
         {
             var bookOne = new Book(1);
@@ -42,6 +46,7 @@ namespace PotterKata
         private int _bookCount = 0;
         private decimal _total;
         private readonly Dictionary<int, int> _purchases;
+        private int _numberOfBooksDiscounted = 0;
 
         public Basket()
         {
@@ -61,23 +66,32 @@ namespace PotterKata
 
             if (_purchases.ContainsKey(1) && _purchases.ContainsKey(2))
             {
-                var numberOfBooksDiscounted = 2;
-                var sumOfNormalPriceBooks = GetSumOfNormalPriceBooks(numberOfBooksDiscounted);
+                ApplyFivePercentDiscount();
+                var sumOfNormalPriceBooks = GetSumOfNormalPriceBooks(_numberOfBooksDiscounted);
 
-                var discountSum = numberOfBooksDiscounted * _priceOfBook * ((100 - fivePercentDiscount) / 100);
+                var discountSum = _numberOfBooksDiscounted * _priceOfBook * ((100 - fivePercentDiscount) / 100);
                 _total = sumOfNormalPriceBooks + discountSum;
             }
             else
             _total = bookSum;
         }
 
+        private void ApplyFivePercentDiscount()
+        {
+            while (_purchases[1] > 0 && _purchases[2] > 0)
+            {
+                _numberOfBooksDiscounted += 2;
+                _purchases[1] -= 1;
+                _purchases[2] -= 1;
+            }
+        }
+
         private int GetSumOfNormalPriceBooks(int numberOfBooksDiscounted)
         {
             var normalPriceSum = 0;
-            var normalPriceBooks = 0;
             if (_bookCount > numberOfBooksDiscounted)
             {
-                normalPriceBooks += 1;
+                var normalPriceBooks = _bookCount - numberOfBooksDiscounted;
                 normalPriceSum = normalPriceBooks * _priceOfBook;
             }
             return normalPriceSum;
