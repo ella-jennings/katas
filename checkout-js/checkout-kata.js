@@ -8,7 +8,7 @@ describe('CheckoutTests', function(){
 	var itemB = 'itemB';
 
 	function setup(){
-		checkout = new Checkout(itemPriceList);
+		checkout = new Checkout(itemPriceList, new DiscountCalculator());
 	}
 
 	function getExpectedCost(numberOfItems, item){
@@ -51,31 +51,57 @@ describe('CheckoutTests', function(){
 		checkout.scan(2, itemB);
 		assert.equal(checkout.getTotal(), 45);
 	})
+
+	it('Scanning three ItemA and one ItemB costs 160', function(){
+		checkout.scan(3, itemA);
+		checkout.scan(1, itemB);
+		assert.equal(checkout.getTotal(), 160);
+	})
+
+	it('Scanning one ItemB and three ItemA costs 160', function(){
+		checkout.scan(1, itemB);
+		checkout.scan(3, itemA);
+		assert.equal(checkout.getTotal(), 160);
+	})
+
+
+	it('Scanning six ItemA costs 260', function(){
+		checkout.scan(6, itemA);
+		assert.equal(checkout.getTotal(), 260);
+	})
+
+	it('Scanning four ItemB costs 90', function(){
+		checkout.scan(4, itemB);
+		assert.equal(checkout.getTotal(), 90);
+	})
+
+	it('Scanning four ItemB, one at a time costs 90', function(){
+		checkout.scan(1, itemB);
+		checkout.scan(1, itemB);
+		checkout.scan(1, itemB);
+		checkout.scan(1, itemB);
+		assert.equal(checkout.getTotal(), 90);
+	})
 });
 
 
 
-function Checkout(itemPriceList){
+
+function Checkout(itemPriceList, discountCalculator){
 	var itemPrices = itemPriceList;
+	var numberOfEachItem = { itemA:0, itemB:0 };
 	var total = 0;
 	
 	function scan(numberOfItems, item){
 		var itemPrice = lookupPrice(item);
 		var itemtotal = itemPrice * numberOfItems;
 		total += itemtotal;
-		applySpecialPrice(numberOfItems, item);
-	}
-
-	function applySpecialPrice(numberOfItems, item){
-		if(numberOfItems == 3 && item == 'itemA'){
-			total = 130;
-		}
-		if(numberOfItems == 2 && item == 'itemB'){
-			total = 45;
-		}
+		numberOfEachItem[item] += numberOfItems;
 	}
 
 	function getTotal(){
+		var discounts = discountCalculator.getTotalDiscount(numberOfEachItem);
+		total = total - discounts;
 		return total;
 	}
 
@@ -86,5 +112,40 @@ function Checkout(itemPriceList){
 	return {
 		scan: scan,
 		getTotal: getTotal
+	}
+}
+
+function ThirdPartyDiscountCalculator() {
+
+	function getTotalDiscount(numberOfEachItem){
+		return 20;
+	}
+
+	return {
+		getTotalDiscount: getTotalDiscount
+	}
+}
+
+
+function DiscountCalculator(){
+		function getTotalDiscount(numberOfEachItem){
+
+		var discountOne = applySpecialPrice('itemA', 3, 20, numberOfEachItem);
+		var discountTwo =applySpecialPrice('itemB', 2, 15, numberOfEachItem);
+		var discountTotal = discountOne + discountTwo;
+		return discountTotal;
+	}
+
+	function applySpecialPrice(item, numberForDiscount, discount, numberOfEachItem){
+		if((numberOfEachItem[item] % numberForDiscount) == 0){
+			var numberOfDiscounts = numberOfEachItem[item] / numberForDiscount;
+			discountTotal = discount*numberOfDiscounts;
+			return discountTotal;
+		}
+		else return 0;
+	}
+
+	return {
+		getTotalDiscount: getTotalDiscount
 	}
 }
