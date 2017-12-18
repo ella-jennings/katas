@@ -22,13 +22,20 @@ namespace PotterKata
         {
             var numberOfFirstBook = _purchases[1];
             var numberOfSecondBook = _purchases[2];
+            var numberOfThirdBook = _purchases[3];
             var numberOfDiscountedBooks = 0;
 
             while (BooksRemain(numberOfFirstBook) && BooksRemain(numberOfSecondBook))
             {
                 numberOfDiscountedBooks += 2;
                 numberOfFirstBook -= 1;
-                numberOfSecondBook -= 1;
+                _purchases[2] -= 1;
+            }
+            while (BooksRemain(numberOfFirstBook) && BooksRemain(numberOfThirdBook))
+            {
+                numberOfDiscountedBooks += 2;
+                numberOfFirstBook -= 1;
+                numberOfThirdBook -= 1;
             }
             return numberOfDiscountedBooks;
         }
@@ -67,6 +74,10 @@ namespace PotterKata
 
             decimal totalPrice;
             if (_purchases.ContainsKey(1) && _purchases.ContainsKey(2))
+            {
+                totalPrice = GetTotalWithDiscount(totalBooks);
+            }
+            if (_purchases.Count > 1)
             {
                 totalPrice = GetTotalWithDiscount(totalBooks);
             }

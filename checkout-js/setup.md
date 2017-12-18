@@ -7,3 +7,5 @@ npm run test
 
 - does special price apply
 - special price calculator
+
+crc card - what messages are being sent between
