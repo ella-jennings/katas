@@ -5,6 +5,8 @@ namespace GameOfFifteen.Game
 {
   class GameController
   {
+    private const int BoardSize = 2;
+
     private readonly GameBoard _board = new GameBoard();
 
 

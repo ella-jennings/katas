@@ -1,30 +1,53 @@
-﻿using System.Collections.Generic;
-using System.Runtime.InteropServices;
-using NUnit.Framework;
-using NUnit.Framework.Constraints;
+﻿using System;
 
 namespace GameOfFifteen.Game
 {
   public class GameBoard
   {
-    private const int BoardSize = 2;
-    private readonly int _positions = (BoardSize * BoardSize) - 1;
-    private readonly int[,] _boardPositions = new int[BoardSize,BoardSize];
+    private int[,] _board;
+    private const int Boardsize = 3;
 
     public GameBoard()
     {
-      for (var x = 0; x < BoardSize; x++)
+      SetUpBoard();
+    }
+
+    private void SetUpBoard()
+    {
+      var positions = (Boardsize * Boardsize) - 1;
+      _board = new int[Boardsize, Boardsize];
+
+      for (var x = 0; x < Boardsize; x++)
       {
-        for (var y = 0; y < BoardSize; y++)
+        for (var y = 0; y < Boardsize; y++)
         {
-          _boardPositions[x, y] = _positions;
-          _positions = _positions - 1;
+          _board[x, y] = positions;
+          positions = positions - 1;
         }
       }
     }
-    public int[,] GetPosition()
+
+    public int[,] GetCurrentState()
     {
-      return _boardPositions;
+      return _board;
+    }
+
+    //public void Move(char movementCommand)
+    //{
+    //  for (var x = 0; x < _boardsize; x++)
+    //  {
+    //    for (var y = 0; y < _boardsize; y++)
+    //    {
+    //      if (_board[x,y] == 0)
+    //      {
+    //        if (movementCommand == 'w')
+    //        {
+    //          _board[x, y] = _board[x, y - 1];
+    //          _board[x, y - 1] = 0;
+    //        }     
+    //      }
+    //    }
+    //  }
     }
   }
-}
+
