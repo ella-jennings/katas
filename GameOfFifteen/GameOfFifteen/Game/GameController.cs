@@ -1,19 +1,14 @@
-﻿using NUnit.Framework;
-using NUnit.Framework.Internal;
+﻿using NUnit.Framework.Constraints;
 
 namespace GameOfFifteen.Game
 {
   class GameController
   {
-    private const int BoardSize = 2;
+    public GameBoard Board { get; }
 
-    private readonly GameBoard _board = new GameBoard();
-
-
-
-    public GameBoard GetBoard()
+    public GameController(string input, int boardSize)
     {
-      return _board;
+      Board = new GameBoard(boardSize);
     }
   }
 }

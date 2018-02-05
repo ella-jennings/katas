@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using GameOfFifteen.Game;
 
 namespace GameOfFifteen
 {
@@ -10,6 +7,9 @@ namespace GameOfFifteen
   {
     static void Main(string[] args)
     {
+      var gameController = new GameController("", 2);
+      var board = gameController.Board;
+
     }
   }
 }

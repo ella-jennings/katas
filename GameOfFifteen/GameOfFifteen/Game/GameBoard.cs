@@ -1,53 +1,31 @@
-﻿using System;
-
-namespace GameOfFifteen.Game
+﻿namespace GameOfFifteen.Game
 {
   public class GameBoard
   {
-    private int[,] _board;
-    private const int Boardsize = 3;
+    public int[,] BoardPositions { get; private set; }
+    private static int _boardsize;
+    //private static readonly int MaxBoardPosition = _boardsize - 1;
 
-    public GameBoard()
+    public GameBoard(int boardsize)
     {
+      _boardsize = boardsize;
       SetUpBoard();
     }
 
     private void SetUpBoard()
     {
-      var positions = (Boardsize * Boardsize) - 1;
-      _board = new int[Boardsize, Boardsize];
+      var positionNumber = 0;
+      BoardPositions = new int[_boardsize, _boardsize];
 
-      for (var x = 0; x < Boardsize; x++)
+      for (var x = 0; x < _boardsize; x++)
       {
-        for (var y = 0; y < Boardsize; y++)
+        for (var y = 0; y < _boardsize; y++)
         {
-          _board[x, y] = positions;
-          positions = positions - 1;
+          BoardPositions[x, y] = positionNumber;
+          positionNumber += 1;
         }
       }
     }
-
-    public int[,] GetCurrentState()
-    {
-      return _board;
-    }
-
-    //public void Move(char movementCommand)
-    //{
-    //  for (var x = 0; x < _boardsize; x++)
-    //  {
-    //    for (var y = 0; y < _boardsize; y++)
-    //    {
-    //      if (_board[x,y] == 0)
-    //      {
-    //        if (movementCommand == 'w')
-    //        {
-    //          _board[x, y] = _board[x, y - 1];
-    //          _board[x, y - 1] = 0;
-    //        }     
-    //      }
-    //    }
-    //  }
-    }
   }
+}
 

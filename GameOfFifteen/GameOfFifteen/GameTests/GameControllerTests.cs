@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using GameOfFifteen.Game;
+﻿using GameOfFifteen.Game;
 using NUnit.Framework;
 
 namespace GameOfFifteen.GameTests
@@ -8,25 +7,25 @@ namespace GameOfFifteen.GameTests
   public class GameControllerTests
   {
     [Test]
-    public void GameController_ShouldInitiate3by3Board()
+    public void GameController_ShouldInitiate2x2BoardCorrectly()
     {
-      var gamecontroller = new GameController();
-      var gameBoard = gamecontroller.GetBoard();
+      var gamecontroller = new GameController("", 2);
+      var gameBoard = gamecontroller.Board.BoardPositions;
 
       var expectedBoardSetup = new[,]
-        {{8, 7, 6}, {5, 4, 3}, {2, 1, 0}};
+        { {0, 1}, {2, 3} };
 
-      Assert.That(gameBoard.GetCurrentState(), Is.EqualTo(expectedBoardSetup));
+      Assert.That(gameBoard[0,0], Is.EqualTo(0));
+      Assert.That(gameBoard[0,0], Is.EqualTo(expectedBoardSetup[0,0]));
+      Assert.That(gameBoard[0,1], Is.EqualTo(1));
+      Assert.That(gameBoard[0,1], Is.EqualTo(expectedBoardSetup[0,1]));
+      Assert.That(gameBoard[1,0], Is.EqualTo(2));
+      Assert.That(gameBoard[1,0], Is.EqualTo(expectedBoardSetup[1,0]));
+      Assert.That(gameBoard[1,1], Is.EqualTo(3));
+      Assert.That(gameBoard[1,1], Is.EqualTo(expectedBoardSetup[1,1]));
     }
 
-    //  [TestCase('w', new int[2, 2] { { 3, 2 }, { 0, 1 } })]
-    //  public void Move_ShouldSwapEmptyTileWithOneAbove(char movementCommand, params int[,] expectedPositions)
-    //  {
-    //    var gameBoard = new GameBoard(2);
-    //    gameBoard.Move(movementCommand);
-
-    //    Assert.That(gameBoard.GetCurrentState(), Is.EqualTo(expectedPositions));
-    //}
-    //}
+    //[Test]
   }
 }
+
