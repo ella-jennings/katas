@@ -3,6 +3,8 @@ using NUnit.Framework;
 
 namespace CheckoutConnaisance
 {
+
+  // change int to money with no breaking tests
   [TestFixture]
   public class UnitTest1
   {
@@ -27,6 +29,7 @@ namespace CheckoutConnaisance
     private string _itemB;
     private int _expectedItemACost;
     private int _expectedItemBCost;
+    private Money _expectedItemAMoney;
 
     [Test]
     public void OneItemACosts50()
@@ -46,6 +49,16 @@ namespace CheckoutConnaisance
       var result = _checkout.GetTotal();
 
       Assert.That(result, Is.EqualTo(_expectedItemBCost));
+    }
+  }
+
+  internal class Money
+  {
+    public readonly int Value;
+
+    public Money(int value)
+    {
+      Value = value;
     }
   }
 
