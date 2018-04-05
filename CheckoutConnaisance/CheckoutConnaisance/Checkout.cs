@@ -11,15 +11,17 @@ namespace CheckoutConnaisance
     [SetUp]
     public void Setup()
     {
-      _expectedItemACost = 50;
-      _expectedItemBCost = 30;
+      var expectedItemACost = 50;
+      var expectedItemBCost = 30;
+      _expectedItemACostAsMoney = new Money(expectedItemACost);
+      _expectedItemBCostAsMoney = new Money(expectedItemBCost);
       _itemA = "a";
       _itemB = "b";
 
       var expectedPricesAsMoney = new Dictionary<string, Money>
       {
-        {_itemA, new Money(_expectedItemACost)},
-        {_itemB, new Money(_expectedItemBCost)}
+        {_itemA, _expectedItemACostAsMoney},
+        {_itemB, _expectedItemBCostAsMoney}
       };
 
       _checkout = new Checkout(expectedPricesAsMoney);
@@ -28,8 +30,8 @@ namespace CheckoutConnaisance
     private Checkout _checkout;
     private string _itemA;
     private string _itemB;
-    private int _expectedItemACost;
-    private int _expectedItemBCost;
+    private Money _expectedItemACostAsMoney;
+    private Money _expectedItemBCostAsMoney;
 
     [Test]
     public void OneItemACosts50()
@@ -38,7 +40,7 @@ namespace CheckoutConnaisance
 
       var result = _checkout.GetTotalFromMoney();
 
-      Assert.That(result.Value, Is.EqualTo(_expectedItemACost));
+      Assert.That(result.Value, Is.EqualTo(_expectedItemACostAsMoney.Value));
     }
 
     [Test]
@@ -47,7 +49,7 @@ namespace CheckoutConnaisance
       _checkout.AddItemAsMoney(_itemB);
       var result = _checkout.GetTotalFromMoney();
 
-      Assert.That(result.Value, Is.EqualTo(_expectedItemBCost));
+      Assert.That(result.Value, Is.EqualTo(_expectedItemBCostAsMoney.Value));
     }
   }
 
