@@ -20,8 +20,12 @@ namespace CheckoutConnaisance
         {_itemA, _expectedItemACost},
         {_itemB, _expectedItemBCost}
       };
+      var expectedPricesAsMoney = new Dictionary<string, Money>
+      {
+        {_itemA, new Money(_expectedItemACost)}
+      };
 
-      _checkout = new Checkout(expectedPrices);
+      _checkout = new Checkout(expectedPrices, expectedPricesAsMoney);
     }
 
     private Checkout _checkout;
@@ -29,14 +33,15 @@ namespace CheckoutConnaisance
     private string _itemB;
     private int _expectedItemACost;
     private int _expectedItemBCost;
-    private Money _expectedItemAMoney;
 
     [Test]
     public void OneItemACosts50()
     {
       _checkout.AddItem(_itemA);
+      _checkout.AddItemAsMoney(_itemA);
 
       var result = _checkout.GetTotal();
+      var moneyResult = _checkout.GetTotalFromMoney();
 
       Assert.That(result, Is.EqualTo(_expectedItemACost));
     }
@@ -60,16 +65,25 @@ namespace CheckoutConnaisance
     {
       Value = value;
     }
+
+    public Money Add(Money money)
+    {
+      return new Money(Value + money.Value);
+    }
   }
 
   internal class Checkout
   {
     private readonly Dictionary<string, int> _itemPrices;
+    private readonly Dictionary<string, Money> _itemPricesAsMoney;
     private int _total;
+    private Money _monetaryValue;
 
-    public Checkout(Dictionary<string, int> itemPrices)
+    public Checkout(Dictionary<string, int> itemPrices, Dictionary<string, Money> itemPricesAsMoney)
     {
+      _monetaryValue = new Money(0);
       _itemPrices = itemPrices;
+      _itemPricesAsMoney = itemPricesAsMoney;
     }
 
     public int GetTotal()
@@ -80,6 +94,16 @@ namespace CheckoutConnaisance
     public void AddItem(string item)
     {
       _total = _itemPrices[item];
+    }
+
+    public object GetTotalFromMoney()
+    {
+      return _monetaryValue;
+    }
+
+    public void AddItemAsMoney(string item)
+    {
+      _monetaryValue = _monetaryValue.Add(_itemPricesAsMoney[item]);
     }
   }
 }
