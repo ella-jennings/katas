@@ -22,7 +22,8 @@ namespace CheckoutConnaisance
       };
       var expectedPricesAsMoney = new Dictionary<string, Money>
       {
-        {_itemA, new Money(_expectedItemACost)}
+        {_itemA, new Money(_expectedItemACost)},
+        {_itemB, new Money(_expectedItemBCost)}
       };
 
       _checkout = new Checkout(expectedPrices, expectedPricesAsMoney);
@@ -37,23 +38,21 @@ namespace CheckoutConnaisance
     [Test]
     public void OneItemACosts50()
     {
-      _checkout.AddItem(_itemA);
       _checkout.AddItemAsMoney(_itemA);
 
       _checkout.GetTotal();
-      var moneyResult = _checkout.GetTotalFromMoney();
+      var result = _checkout.GetTotalFromMoney();
 
-      Assert.That(moneyResult.Value, Is.EqualTo(_expectedItemACost));
+      Assert.That(result.Value, Is.EqualTo(_expectedItemACost));
     }
 
     [Test]
     public void OneItemBCosts30()
     {
-      _checkout.AddItem(_itemB);
+      _checkout.AddItemAsMoney(_itemB);
+      var result = _checkout.GetTotalFromMoney();
 
-      var result = _checkout.GetTotal();
-
-      Assert.That(result, Is.EqualTo(_expectedItemBCost));
+      Assert.That(result.Value, Is.EqualTo(_expectedItemBCost));
     }
   }
 
