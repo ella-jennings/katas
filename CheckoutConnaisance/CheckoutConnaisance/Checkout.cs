@@ -40,10 +40,10 @@ namespace CheckoutConnaisance
       _checkout.AddItem(_itemA);
       _checkout.AddItemAsMoney(_itemA);
 
-      var result = _checkout.GetTotal();
+      _checkout.GetTotal();
       var moneyResult = _checkout.GetTotalFromMoney();
 
-      Assert.That(result, Is.EqualTo(_expectedItemACost));
+      Assert.That(moneyResult.Value, Is.EqualTo(_expectedItemACost));
     }
 
     [Test]
@@ -96,7 +96,7 @@ namespace CheckoutConnaisance
       _total = _itemPrices[item];
     }
 
-    public object GetTotalFromMoney()
+    public Money GetTotalFromMoney()
     {
       return _monetaryValue;
     }
