@@ -48,3 +48,4 @@ or
 + Always start with a failing test before you make it pass
 + Write one test at a time
 + Never commit a failing test
++ Be wary of connaisance
